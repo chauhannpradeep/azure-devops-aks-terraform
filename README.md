@@ -19,12 +19,16 @@ Azure DevOps | Terraform | Docker | AKS | Azure | .NET | Kubernetes
 ### Screenshots of Running Containers;
 
 http://localhost:8080/health
-<img width="642" height="260" alt="image" src="https://github.com/user-attachments/assets/14dad673-324a-42b0-95cc-73438e9f26fe" />
+<img width="250" height="250" alt="image" src="https://github.com/user-attachments/assets/14dad673-324a-42b0-95cc-73438e9f26fe" />
+
 
 http://localhost:8080/api/info
-<img width="623" height="287" alt="image" src="https://github.com/user-attachments/assets/48c6cd07-1775-4aed-8333-a45ac9a3c1c5" />
+
+<img width="250" height="250" alt="image" src="https://github.com/user-attachments/assets/48c6cd07-1775-4aed-8333-a45ac9a3c1c5" />
+
 
 http://localhost:8080/swagger
-<img width="1526" height="967" alt="image" src="https://github.com/user-attachments/assets/52d5c131-4cb8-45a8-ae8a-40e3c8284fcb" />
+
+<img width="300" height="900" alt="image" src="https://github.com/user-attachments/assets/52d5c131-4cb8-45a8-ae8a-40e3c8284fcb" />
 
 --------------------------------------------------------------------------------
