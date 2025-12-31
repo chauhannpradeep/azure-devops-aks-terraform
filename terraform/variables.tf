@@ -1,5 +1,5 @@
 variable "location" {
-  default = "eastus"
+  default = "centralindia"
 }
 
 variable "resource_group_name" {
@@ -19,5 +19,5 @@ variable "node_count" {
 }
 
 variable "node_vm_size" {
-  default = "Standard_B2s"  # best price/perf for free credits
+  default = "Standard_B2s_v2"  # best price/perf for free credits
 }

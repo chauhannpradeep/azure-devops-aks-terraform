@@ -32,3 +32,17 @@ http://localhost:8080/swagger
 <img width="300" height="900" alt="image" src="https://github.com/user-attachments/assets/52d5c131-4cb8-45a8-ae8a-40e3c8284fcb" />
 
 --------------------------------------------------------------------------------
+
+**** K8s Pods running ******
+-------------------------
+On LoadBalancer (Service External IP)
+![alt text](image-1.png) 
+
+![alt text](image.png) 
+
+![alt text](image-4.png)
+--------------------------------------------------------------------------------
+On Ingress IP 
+![alt text](image-2.png)
+
+![alt text](image-3.png)
