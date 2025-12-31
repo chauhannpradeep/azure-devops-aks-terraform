@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: sampleapi
-          image: acrdevopsdemo123.azurecr.io/sampleapi:1.0
+          image: acrdevopsdemo123.azurecr.io/sampleapi:$(tag)
           ports:
             - containerPort: 8080
           resources:

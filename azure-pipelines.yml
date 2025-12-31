@@ -10,31 +10,43 @@ variables:
   acrLoginServer: acrdevopsdemo123.azurecr.io
 
 stages:
+# ---------------- CI ----------------
 - stage: Build
   displayName: Build and Push Docker Image
   jobs:
   - job: DockerBuild
-    displayName: Docker Build and Push
     pool:
       name: Default   # SELF-HOSTED AGENT POOL
     steps:
     - task: AzureCLI@2
-      displayName: Login to ACR, Build & Push Image
+      displayName: Build and Push Image
       inputs:
-        azureSubscription: azure-sc-aks-acr
-        scriptType: ps
-        scriptLocation: inlineScript
-        inlineScript:
-          Write-Host "Logging into ACR"
-          az acr login --name $(acrName)
+        containerRegistry: 'azure-sc-aks-acr'
+        repository: $(imageName)
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: |
+          $(tag)
+          latest
 
-          Write-Host "Building Docker image"
-          docker build `
-            -t $(acrLoginServer)/$(imageName):$(tag) `
-            -t $(acrLoginServer)/$(imageName):latest `
-            app
-
-          Write-Host "Pushing Docker image"
-          docker push $(acrLoginServer)/$(imageName):$(tag)
-          docker push $(acrLoginServer)/$(imageName):latest
-
+# ---------------- CD ----------------
+- stage: Deploy
+  displayName: Deploy to AKS
+  dependsOn: Build
+  jobs:
+  - deployment: AKSDeploy
+    environment: 'dev'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: KubernetesManifest@1
+            displayName: Deploy to AKS
+            inputs:
+              action: deploy
+              kubernetesServiceConnection: 'aks-service-connection'
+              manifests: |
+                k8s/deployment.yaml
+                k8s/service.yaml
+              containers: |
+                $(acrLoginServer)/$(imageName):$(tag)
