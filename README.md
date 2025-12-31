@@ -46,3 +46,13 @@ On Ingress IP
 ![alt text](image-2.png)
 
 ![alt text](image-3.png)
+--------------------------------------------------------------------------------
+Pipeline Running Status
+
+![alt text](image-7.png)
+
+--------------------------------------------------------------------------------
+Final 2 Pods running
+
+![alt text](image-6.png)
+![alt text](image-5.png)
