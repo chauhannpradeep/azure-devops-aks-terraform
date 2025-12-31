@@ -22,7 +22,7 @@ stages:
       displayName: Login to ACR, Build & Push Image
       inputs:
         azureSubscription: azure-sc-aks-acr
-        scriptType: bash
+        scriptType: pscore
         scriptLocation: inlineScript
         inlineScript:
           echo "Logging into ACR"
