@@ -16,7 +16,7 @@ stages:
   - job: DockerBuild
     displayName: Docker Build and Push
     pool:
-      vmImage: 'ubuntu-latest'
+      name: Default   # SELF-HOSTED AGENT POOL
     steps:
     - task: AzureCLI@2
       displayName: Login to ACR, Build & Push Image
