@@ -22,16 +22,19 @@ stages:
       displayName: Login to ACR, Build & Push Image
       inputs:
         azureSubscription: azure-sc-aks-acr
-        scriptType: pscore
+        scriptType: ps
         scriptLocation: inlineScript
         inlineScript:
-          echo "Logging into ACR"
+          Write-Host "Logging into ACR"
           az acr login --name $(acrName)
 
-          echo "Building Docker image"
-          docker build -t $(acrLoginServer)/$(imageName):$(tag) -t $(acrLoginServer)/$(imageName):latest app
+          Write-Host "Building Docker image"
+          docker build `
+            -t $(acrLoginServer)/$(imageName):$(tag) `
+            -t $(acrLoginServer)/$(imageName):latest `
+            app
 
-          echo "Pushing Docker image"
+          Write-Host "Pushing Docker image"
           docker push $(acrLoginServer)/$(imageName):$(tag)
           docker push $(acrLoginServer)/$(imageName):latest
 
