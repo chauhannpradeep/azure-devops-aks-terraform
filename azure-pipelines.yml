@@ -8,45 +8,60 @@ variables:
   tag: $(Build.BuildId)
   acrName: acrdevopsdemo123
   acrLoginServer: acrdevopsdemo123.azurecr.io
+  resourceGroup: rg-aks-devops-demo
+  aksName: aks-devops-demo
 
-stages:
 # ---------------- CI ----------------
+stages:
 - stage: Build
   displayName: Build and Push Docker Image
   jobs:
   - job: DockerBuild
     pool:
-      name: Default   # SELF-HOSTED AGENT POOL
+      name: Default   # Self-hosted Windows agent
     steps:
     - task: AzureCLI@2
-      displayName: Build and Push Image
+      displayName: Build and Push Image to ACR
       inputs:
-        containerRegistry: 'azure-sc-aks-acr'
-        repository: $(imageName)
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
-        tags: |
-          $(tag)
-          latest
+        azureSubscription: azure-sc-aks-acr
+        scriptType: ps
+        scriptLocation: inlineScript
+        inlineScript: |
+          Write-Host "Login to ACR"
+          az acr login --name $(acrName)
+
+          Write-Host "Build Docker image"
+          docker build `
+            -t $(acrLoginServer)/$(imageName):$(tag) `
+            -t $(acrLoginServer)/$(imageName):latest `
+            app
+
+          Write-Host "Push Docker image"
+          docker push $(acrLoginServer)/$(imageName):$(tag)
+          docker push $(acrLoginServer)/$(imageName):latest
 
 # ---------------- CD ----------------
 - stage: Deploy
   displayName: Deploy to AKS
   dependsOn: Build
   jobs:
-  - deployment: AKSDeploy
-    environment: 'dev'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: KubernetesManifest@1
-            displayName: Deploy to AKS
-            inputs:
-              action: deploy
-              kubernetesServiceConnection: 'aks-service-connection'
-              manifests: |
-                k8s/deployment.yaml
-                k8s/service.yaml
-              containers: |
-                $(acrLoginServer)/$(imageName):$(tag)
+  - job: AKSDeploy
+    pool:
+      name: Default
+    steps:
+    - task: AzureCLI@2
+      displayName: Deploy to AKS
+      inputs:
+        azureSubscription: azure-sc-aks-acr
+        scriptType: ps
+        scriptLocation: inlineScript
+        inlineScript: |
+          Write-Host "Get AKS credentials"
+          az aks get-credentials `
+            --resource-group $(resourceGroup) `
+            --name $(aksName) `
+            --overwrite-existing
+
+          Write-Host "Deploy manifests"
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
